@@ -126,8 +126,31 @@
       - Both standard and materialized can be secure.
       - Underlying query definition only visible to authorized users.
 
-
-
+> ## User Defined Functions (UDFs)
+- User defined functions (UDFs) are schema-level objects that enable users to write their own functions in four different languages: SQL, JavaScript, Python, Java
+- UDFs accept 0 or more parameters.
+- UDFs can be called as part of a SQL statement.
+- UDFs can be overloaded i.e. we can create multiple functions with the same name if their input parameters are different.
+- UDFs can return scalar or tabular results (UDTF). A scalar function returns one output row. The returned row consists of a single column value. A tabular function, also called a table function, or UDTF, returns zero, one, or multiple rows. e.g. `SELECT AREA_OF_CIRCLE(col1) FROM MY_TABLE ; `
+- JavaScript UDF:
+  - JavaScript is specified with the language parameter. 
+  - JavaScript UDFs can refer to themselves recursively.
+  - Because Snowflake and JavaScript have different data types, when passing between the two environments, the data types have to be mapped. e.g. JavaScript doesn't have an integer data type, so all numbers passed to a JavaScript function are represented as doubles in the code.
+- Java UDF:
+  - Snowflake boots up a JVM to execute function written in Java.
+  - Snowflake currently supports writing UDFs in Java versions 8.x, 9.x, 10.x, and 11.x.
+  - Snowflake restrict accessing libraries outside the standard Java libraries.
+  - Java UDFs can specify their definition as in-line code or a pre-compiled jar file.
+  - Java UDFs cannot be designated as secure whereas SQL and JavaScript UDFs can.
+- External Function:
+  - An external function is a user-defined function which calls code that is maintained and executed outside of Snowflake.
+  - You can use various different languages, such as Go or C#, and reference third-party libraries.
+  - Slower and is Less secure
+  - Currently, external functions can only be scalar, returning a single value for each input row.
+  - External functions cannot be shared with other accounts using secure data sharing.
+  - In some situations, Snowflake can charge for data moved to a different cloud platform or region.
+ 
+    ![image](https://github.com/user-attachments/assets/8ef1269e-6432-4117-ba9a-f75bd6694989)
 
 
 
