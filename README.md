@@ -76,10 +76,65 @@
   - An account is created with the system-defined role ACCOUNTADMIN.
   - The Account URL is created using an Account Locator as an Identifier. e.g. `acme-marketing-test-account.snowflakecomputing.com`
 
+- Database & Schemas
+  - Databases must have a unique identifier in an account. Schemas must have a unique identifier in a database.
+  - A database/schema must start with an alphabetic character and cannot contain spaces or special characters unless enclosed in double quotes.
+    ```
+      CREATE DATABASE MY_DATABASE;
+      CREATE DATABASE MY_DB_CLONE CLONE MYTESTDB;
+      CREATE DATABASE MYDB1
+        AS REPLICA OF MYORG.ACCOUNT1.MYDB1
+        DATA_RETENTION_TIME_IN_DAYS = 10;
+      CREATE DATABASE SHARED_DB FROM SHARE UTT783.SHARE;
+
+      CREATE SCHEMA MY_SCHEMA;
+      CREATE SCHEMA MY_SCHEMA_CLONE CLONE MY_SCHEMA;
+    ```
+  - The database name and schema name together form a namespace in Snowflake.
+
+- Table and View
+  - Table Types:
+    - Permanent:
+      - Default table type.
+      - Exists until explicitly dropped.
+      - A permanent table can set the time travel retention period up to 90 days if we're on an enterprise edition or higher Snowflake account. If on the standard edition, the max is one day.
+      - Permanent tables also have access to the non-configurable period of seven days for fail-safe, in which Snowflake can restore deleted data for us.
+    - Temporary
+      - Used for transitory data.
+      - Persist for duration of a session.
+      - Temporary tables have a max time travel retention period of one day, regardless of the Snowflake edition.
+      - They also don't have a fail-safe period. Once a session is over, the table data cannot be recovered by Snowflake.
+    - Transient:
+      - Exists until explicitly dropped.
+      - No fail-safe period. 
+    - External:
+      - Query data outside Snowflake.
+      - Read-only table.
+      - do not support time travel or fail-safe.
+ 
+  - View Types:
+    - Standard:
+      - It's an object that stores a select query definition, not any data. The query references a source table, and when a query is executed against the view, the data is retrieved from the source table.
+      - Does not contribute to storage cost.
+      - Used to restrict contents of a table.
+      - If source table is dropped, querying view returns error.
+    - Materialized:
+      - Stores results of a query definition and periodically refreshes it. Snowflake call this a pre-computer dataset.
+      - Incurs cost as a serverless feature.
+      - Used to boost performance of external tables
+    - Secure:
+      - Both standard and materialized can be secure.
+      - Underlying query definition only visible to authorized users.
 
 
 
 
+
+
+
+
+
+ 
 
 
 > ## User
