@@ -152,6 +152,14 @@
  
     ![image](https://github.com/user-attachments/assets/8ef1269e-6432-4117-ba9a-f75bd6694989)
 
+- Stored Procedures
+  - In Relational Database Management Systems (RDBMS) stored procedures were named collections of SQL statements often containing procedural logic.
+  - Stored procedures are database objects, meaning they're created in a specific database and schema.
+  - You can implement stored procedures using JavaScript, using Snowflake Scripting (SQL) or using Snowpark, which allows us to create stored procedures in Python, Java, and Scala.
+  - For a JavaScript stored procedure, you can only return a scalar value. But in the case of the Snowflake Scripting method, you can return tabular data.
+  - Stored procedures can execute with the owner’s rights or caller’s rights.
+
+  ![image](https://github.com/user-attachments/assets/be7daf5d-8e8c-4488-8c59-e95fd2817c00)
 
 
 
