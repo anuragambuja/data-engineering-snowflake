@@ -19,6 +19,7 @@
 
 - It was originally designed to run on AWS and then ported to Azure in 2018, and then to Google Cloud Platform in 2020.
 - All data files are automatically encrypted by default, using aes256 strong encryption.
+- Snowflake supports ANSI standard SQL, including key parts of ANSI SQL:1999 and SQL:2003 extensions
 
 > ## Multi-cluster Shared Data Architecture
 
@@ -214,8 +215,68 @@
   ![image](https://github.com/user-attachments/assets/076cc218-551f-482c-a80c-7f2267e984ef)
 
 > ## Billing
-- On-demand : Pay for usage as you go
-- Capacity: Pay for usage upfront
+- Snowflake billing unit of measure for compute resource consumption. Storage and Data Transfer are billed in currency.
+  - On-demand : Pay for usage as you go
+  - Capacity: Pay for usage upfront
+- Billing Overview:
+  - Virtual Warehouse Services:
+    - Credit calculated based on size of virtual warehouse.
+    - Credit calculated on per second basis while a virtual warehouse is in ‘started’ state.
+    - Credit calculated with a minimum of 60 seconds.
+  - Cloud Services:
+    - Cloud services include operations that don't make use of user managed virtual warehouses, but nevertheless cost Snowflake something to compute and execute e.g. metadata operations such as creating tables, executing a show or describe command are examples of commands that don't need an active virtual warehouse but are still doing or retrieving something. 
+    - Credits calculated at a rate of 4.4 Credits per compute hour.
+    - Only cloud services that exceeds 10% of the daily usage of the compute resources are billed.
+    - This is called the Cloud Services Adjustment.
+  - Serverless Services:
+    - Each serverless feature has it’s own credit rate per compute-hour.
+    - Serverless features are composed of both compute services and cloud services.
+    - Cloud Services Adjustment does not apply to cloud services usage when used by serverless features. 
+  - Data Storage:
+    - Data storage is calculated monthly based on the average number of on-disk bytes per day in the following locations: - Database Tables and Internal Stages.
+    - Costs calculated based on a flat dollar value rate per terabyte (TB) based on:
+      - Capacity or On-demand.
+      - Cloud provider.
+      - Region. 
+  - Data Transfer
+    - Data transfer charges apply when moving data from one region to another or from one cloud platform to another.
+    - Unloading data from Snowflake using COPY INTO <location> command.
+    - Replicating data to a Snowflake account in a different region or cloud platform.
+    - External functions transferring data out of and into Snowflake. 
+
+> ## Snowflake Scripting
+- It’s used to write stored procedures and procedural code outside of a stored procedure.
+- Variables can only be used within the scope of the block. Variables can also be declared and assigned in the BEGIN section using the LET keyword.
+- SnowSQL and the Classic Console do not correctly parse Snowflake Scripting blocks, they need to be wrapped in string constant delimiters like dollar signs.
+
+    ```
+    # Looping data using Cursor
+      declare
+        total_amount float;
+        c1 cursor for select amount from transactions;
+      begin
+        total_amount := 0.0;
+        for record in c1 do
+          total_amount := total_amount + record.amount;
+        end for;
+        return total_amount;
+      end;
+    
+    # Looping data using RESULTSET
+      declare
+        res resultset;
+      begin
+        res := (select amount from transactions);
+        return table(res);
+      end;
+    ```
+- 
+
+> ## Snowpark
+- Snowpark is an API accessed outside of the Snowflake interface implemented as an alternative to SQL, allowing us to query and process our data using high-level programming languages currently supporting Java, Scala, and Python.
+- Its main abstraction is something called a DataFrame. It's a data structure that organizes data into a two-dimensional table of rows and columns.
+- Snowpark operations are executed lazily, meaning an operation is only executed when an action is requested rather than when it's declared.
+- Snowpark also works on a push down model, meaning all operations are performed using Snowflake compute. No data is transferred to where you're executing the Snowpark code or to another cluster for processing.
 
 
 
@@ -223,8 +284,11 @@
 
 
 
+> ## Commands
+  ```
+  SELECT SYSTEM$WHITELIST();  Returns hostnames and port numbers.
 
-
+  ```
 
 
 
