@@ -162,10 +162,74 @@
   ![image](https://github.com/user-attachments/assets/be7daf5d-8e8c-4488-8c59-e95fd2817c00)
 
 
+> ## Sequences
+-  used to generate sequential and unique numbers automatically. A common use case for this is to increment something like an employee ID or a transaction ID.
+- Sequences cannot guarantee their values will be gap free.
+    ```
+    CREATE SEQUENCE TRANSACTION_SEQ
+    START = 0
+    INCREMENT = 5;
 
+    SELECT TRANSACTION_SEQ.NEXTVAL, TRANSACTION_SEQ.NEXTVAL, TRANSACTION_SEQ.NEXTVAL, TRANSACTION_SEQ.NEXTVAL;
+    
+    -- 0,5,10,15
+    -- 35, 40,45,50
 
+    INSERT INTO TRANSACTION (ID) VALUES (TRANSACTION_SEQ.NEXTVAL);
+    -- 55
 
+    CREATE TABLE TRANSACTIONS
+       (ID INTEGER DEFAULT TRANSACTION_SEQ.NEXTVAL,
+        AMOUNT DOUBLE);
+
+    INSERT INTO TRANSACTION (AMOUNT) VALUES (756.00);
+    ID    | AMOUNT
+    60  | 756.00
+    
+    ```
+- 
  
+> ## Tasks
+- A task is an object used to schedule the execution of a SQL command or a stored procedure.
+- ACCOUTNADMIN role or CREATE TASK privilege.
+- A DAG can be composed of a maximum of 1,000 Tasks, and one Task can only be linked to 100 other Tasks.
+- All Tasks in a DAG must have the same Task owner and they must be stored in the same database and schema.
+
+  ![image](https://github.com/user-attachments/assets/1bc26ddc-c386-437c-b4d6-c1b9819239b0)
+
+> ## Streams
+- A stream is an object created to view & track DML changes to a source table – inserts, updates & deletes.
+- When querying a Stream, the output will have an identical structure to the base table defined during its creation, but will only contain the changed records, not all the records in that table.
+
+  ```
+  CREATE STREAM MY_STREAM ON TABLE MY_TABLE;
+  SELECT * FROM MY_STREAM;
+
+  METADATA$ACTION column: indicates whether the DML operation was an INSERT or a DELETE.
+  METADATA$ISUPDATE column: indicates whether the operation in the action column was as part of an UPDATE statement.
+  METADATA$ROW_ID column: specifies the unique ID for a row.
+
+  ```
+
+  ![image](https://github.com/user-attachments/assets/076cc218-551f-482c-a80c-7f2267e984ef)
+
+> ## Billing
+- On-demand : Pay for usage as you go
+- Capacity: Pay for usage upfront
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 > ## User
