@@ -383,8 +383,28 @@
   - Adding a masking policy to a column fails if the column is referenced by a row access policy.
   - Row access policies are evaluated before data masking policies and the same column cannot be specified in both a masking policy signature and a row access policy signature at the same time.
 
+> ## Account Usage and Information Schema
+- Snowflake provide a shared read-only databased called SNOWFLAKE, imported using a Share object called ACCOUNT_USAGE.
+- It is comprised of 6 schemas, which contain many views providing fine-grained usage metrics at the account and object level.
+- By default, only users with the ACCOUNTADMIN role can access the SNOWFLAKE database.
+  - ACCOUNT_USAGE: It contains views that display object metadata and historical usage metrics for your account.
+  - CORE: currently only contains the system tags used by data classification.
+  - READER_ACCOUNT_USAGE: It contains views that display object metadata and usage metrics for all the reader accounts that have been created for your main account.
+  - ORGANIZATION_USAGE: provides historical usage data for all accounts in an organization.
+  - DATA_SHARING_USAGE: includes views that display information about listings published in a data exchange.
+  - INFORMATION_SCHEMA:
+    - Each database created in an account automatically includes a built-in, read-only schema named INFORMATION_SCHEMA based on the SQL-92 ANSI Information Schema.
+    - Each INFORMATION_SCHEMA contains:
+      - Views displaying metadata for all objects contained in the database.
+      - Views displaying metadata for account-level objects (non-database objects such as roles, warehouses and databases).
+      - Table functions displaying metadata for historical and usage data across an account
+    - The output of a view or table function depends on the privileges granted to the user’s current role.
 
+    ![image](https://github.com/user-attachments/assets/fbb95406-5187-4b87-8682-075817336c88)
 
+- Account usage views record dropped objects, not just those that are currently active.
+- There is latency between an event and when that event is recorded in an account usage view.
+- Certain account usage views provide historical usage metrics. The retention period for these views is 1 year.
 
 
 
