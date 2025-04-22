@@ -279,6 +279,84 @@
 - Snowpark also works on a push down model, meaning all operations are performed using Snowflake compute. No data is transferred to where you're executing the Snowpark code or to another cluster for processing.
 
 
+> ## Access Control
+- Access control is about who can perform what operations on which objects.
+- Frameworks:
+  - Role-based access control (RBAC) is an access control framework in which access privileges are assigned to roles and in turn assigned to users. Privilege --> Role --> User
+  - Discretionary Access Control (DAC):  in which each object has an owner, who can in turn grant access to that object. 
+- Every securable object is owned by a single role which can be found by executing a SHOW <object> command. 
+- The owning role:
+  - Has all privileges on the object by default.
+  - Can grant or revoke privileges on the object to other roles.
+  - Transfer ownership to another role.
+  - Share control of an object if the owning role is shared.
+- A role is an entity to which privileges on securable objects can be granted or revoked.
+  - Roles are assigned to users to give them the authorization to perform actions.
+  - A user can have multiple roles and switch between them within a Snowflake session.
+  - Roles can be granted to other roles creating a role hierarchy.
+  - Privileges of child roles are inherited by parent roles.
+- System-defined Roles:
+  - ORGADMIN:
+    - Manages operations at organization level.
+    - Can create account in an organization.
+    - Can view all accounts in an organization.
+    - Can view usage information across an organization.
+  - ACCOUNTADMIN:
+    - Top-level and most powerful role for an account.
+    - Encapsulates SYSADMIN & SECURITYADMIN.
+    - Responsible for configuring account-level parameters.
+    - View and operate on all objects in an account.
+    - View and manage Snowflake billing and credit data.
+    - Stop any running SQL statements.
+  - SYSADMIN :
+    - Can create warehouses, databases, schemas and other objects in an account.
+  - SECURITYADMIN:
+    - Manage grants globally via the MANAGE GRANTS privilege.
+    - Create, monitor and manage users and roles.
+  - USERADMIN:
+    - User and Role management via CREATE USER and CREATE ROLE security privileges.
+    - Can create users and roles in an account. 
+  - PUBLIC
+    - Automatically granted to every user and every role in an  account. If a default role is not set, when a user starts a session, they will be automatically assigned the public system-defined role.
+    - Can own securable objects, however objects owned by PUBLIC role are available to every other user and role in an account.
+- Custom Roles:
+  - Custom roles can be created by the SECURITYADMIN & USERADMIN roles as well as by any role to which the CREATE ROLE privilege has been granted.
+  - It is recommended to create a hierarchy of custom roles with the top-most custom role assigned to the SYSADMIN role. Custom roles allows you to create a role with custom and finegrained security privileges defined. Custom roles allow administrators working with the systemdefined roles to exercise the security principle of least privilege. If custom roles are not assigned to the SYSADMIN role, system admins will not be able to manage the objects owned by the custom role.
+- Privileges:
+  - A security privilege defines a level of access to an object.
+  - There are 4 categories of security privileges:
+    - Global Privileges
+    - Privileges for account objects
+    - Privileges for schemas
+    - Privileges for schema objects 
+  - Future grants allow privileges to be defined for objects not yet created. Future grants are not supported with data sharing, data replication, and masking policies, and row access policies.
+- Multi-factor Authentication (MFA) in Snowflake is powered by a service called Duo Security.Snowflake recommend that all users with the ACCOUNTADMIN role be required to use MFA. MFA Properties:
+  - MINS_TO_BYPASS_MFA: Specifies the number of minutes to temporarily disable MFA for the user so that they can log in.
+  - DISABLE_MFA: Disables MFA for the user, effectively cancelling their enrolment. To use MFA again, the user must re-enrol.
+  - ALLOWS_CLIENT_MFA_CACHING: MFA token caching reduces the number of prompts that must be acknowledged while connecting and authenticating to Snowflake.
+- Federated Authentication (SSO)
+  - Federated authentication enables users to connect to Snowflake using secure SSO (single sign-on).
+  - Snowflake can delegate authentication responsibility to an SAML 2.0 compliant external identity provider (IdP) with native support for Okta and ADFS IdPs. An IdP is an independent service responsible for creating and maintaining user credentials as well as authenticating users for SSO access to Snowflake.
+  - In a federated environment Snowflake is referred to as a Service Provider (SP).
+  - Federated Authentication Properties:
+    - SAML_IDENTITY_PROVIDER: How to specify an IdP during the Snowflake setup of Federated Authentication.
+    - SSO_LOGIN_PAGE: Enable button for Snowflake-initiated SSO for your identity provider (as specified in SAML_IDENTITY_PROVIDER) in the Snowflake main login page.
+- OAuth:
+  - Snowflake supports the OAuth 2.0 protocol.
+  - OAuth is an open-standard protocol that allows supported clients authorized access to Snowflake without sharing or storing user login credentials.
+  - Snowflake offers two OAuth pathways: Snowflake OAuth and External OAuth.
+- SCIM:
+  - System for Cross-domain Identity Management (SCIM) can be used to manage users and groups ( Snowflake roles) in cloud applications using RESTful APIs.  
+- Network Policies
+  - Network Policies provide the user with the ability to allow or deny access to their Snowflake account based on a single IP address or list of addresses.
+  - Network Policies are composed of an allowed IP range and optionally a blocked IP range. Blocked IP ranges are applied first. 
+  - Network Policies currently support only IPv4 addresses. Network policies use CIDR notation to express an IP subnet range.
+  - Network Policies can be applied on the account level or to individual users. If a user is associated to both an account-level and user-level network policy, the user-level policy takes precedence.
+  - Only one Network Policy can be associated with an account at any one time. If another is set, it will replace the old one.
+  - Only one Network Policy can be associated with an user at any one time. 
+
+
+
 
 
 
@@ -287,7 +365,12 @@
 > ## Commands
   ```
   SELECT SYSTEM$WHITELIST();  Returns hostnames and port numbers.
+  SHOW <object>;  
 
+  GRANT USAGE ON DATABASE MY_DB TO ROLE MY_ROLE;
+  REVOKE USAGE ON DATABASE MY_DB TO ROLE MY_ROLE;
+  GRANT SELECT ON FUTURE TABLES IN SCHEMA MY_SCHEMA TO ROLE MY_ROLE;
+  
   ```
 
 
