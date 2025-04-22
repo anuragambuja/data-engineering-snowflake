@@ -126,6 +126,9 @@
     - Secure:
       - Both standard and materialized can be secure.
       - Underlying query definition only visible to authorized users.
+      - A secure view is created by adding the keyword SECURE in the view DDL.
+      - The definition of a secure view is only available to the object owner.
+      - Secure views bypass query optimizations which may inadvertently expose data in the underlying table. 
 
 > ## User Defined Functions (UDFs)
 - User defined functions (UDFs) are schema-level objects that enable users to write their own functions in four different languages: SQL, JavaScript, Python, Java
@@ -355,7 +358,30 @@
   - Only one Network Policy can be associated with an account at any one time. If another is set, it will replace the old one.
   - Only one Network Policy can be associated with an user at any one time. 
 
+> ## Data Encryption
+- Data loaded into Snowflake tables is encrypted using AES-256 strong encryption automatically during the loading process.
+- Secure HTTPS is always used when connecting to a Snowflake account, URL, whether through a browser on the UI or using a JDBC driver. Snowflake makes use of the TLS 1.2 protocol to encrypt all network communications from your client machine to the Snowflake endpoints.
+- Snowflake uses hierarchical key model with each key higher up in the key hierarchy, encrypting the key below it and the final file key encrypting the user's data, a process called wrapping. Each account master key corresponds to one customer account in Snowflake, each table master key corresponds to one database table. Snowflake stores the top most encryption keys of the key hierarchy in an AWS service called AWS Cloud HMS Classic and generates lower level keys using cloud HMS's random number generation. It's a hardware based solution which integrates with snowflake security framework.
+- Key rotation is the practise of transparently replacing existing account and table encryption keys every 30 days with a new key. Once a retired key exceeds 1 year, Snowflake automatically creates a new encryption key and re-encrypts all data previously protected by the retired key using the new key
+- Column Level security
+  - Sensitive data in plain text is loaded into Snowflake, and it is dynamically masked at the time of query for unauthorized users. Masking Policies:
+    - Data masking policies are schema-level objects, like tables & views.
+    - Creating and applying data masking policies can be done independently of object owners.
+    - Masking policies can be nested, existing in tables and views that reference those tables.
+    - A masking policy is applied no matter where the column is referenced in a SQL statement. The lowest masking policy will apply first.
+    - A data masking policy can be applied either when the object is created or after the object is created. 
+  - Tokenized data is loaded into Snowflake, which is detokenized at query run-time for authorized users via masking policies that call an external tokenization service using external functions. Unlike dynamically masking data, this will store the data in a tokenized form in Snowflake storage.
+  
+    ![image](https://github.com/user-attachments/assets/3e559da0-6aef-4cc5-9599-8e2d0ac3aa1c)
 
+- Row Level security
+  - Row access policies enable a security team to restrict which rows are return in a query.
+  - Similarities with column masking policies:
+    - Row access policies are schema level objects, which means a database and schema must exist in Snowflake before a masking policy can be applied to a column.
+    - They both allow for segregation of duties. They also both follow the same pattern of creating first and then applying.
+    - Row access policies can be nested with the first policy in the chain applying first.
+  - Adding a masking policy to a column fails if the column is referenced by a row access policy.
+  - Row access policies are evaluated before data masking policies and the same column cannot be specified in both a masking policy signature and a row access policy signature at the same time.
 
 
 
