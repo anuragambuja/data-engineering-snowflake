@@ -313,6 +313,7 @@
     - Stop any running SQL statements.
   - SYSADMIN :
     - Can create warehouses, databases, schemas and other objects in an account.
+    - If custom roles are assigned to the SYSADMIN role, system admins will not be able to manage the objects owned by the custom role.
   - SECURITYADMIN:
     - Manage grants globally via the MANAGE GRANTS privilege.
     - Create, monitor and manage users and roles.
@@ -386,6 +387,7 @@
 > ## Account Usage and Information Schema
 - Snowflake provide a shared read-only databased called SNOWFLAKE, imported using a Share object called ACCOUNT_USAGE.
 - It is comprised of 6 schemas, which contain many views providing fine-grained usage metrics at the account and object level.
+- The maximum number of months data in these views available for 12.
 - By default, only users with the ACCOUNTADMIN role can access the SNOWFLAKE database.
   - ACCOUNT_USAGE: It contains views that display object metadata and historical usage metrics for your account.
   - CORE: currently only contains the system tags used by data classification.
@@ -405,6 +407,25 @@
 - Account usage views record dropped objects, not just those that are currently active.
 - There is latency between an event and when that event is recorded in an account usage view.
 - Certain account usage views provide historical usage metrics. The retention period for these views is 1 year.
+
+
+> ## Object Tagging
+- An object tag in Snowflake is a schema level object that allows you to assign specific metadata to other database objects, serving as a labeling or classification mechanism. For example, we could create a tag called business unit.
+- This helps with something called data governance. Data governance is all about managing your data so it's organized, secure, and compliant with regulations.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
