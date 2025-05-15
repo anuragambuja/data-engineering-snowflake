@@ -54,6 +54,14 @@
 - When limits are reached an action can be triggered, such as notify user or suspend warehouse.
 - Resource Monitors can only be created by account administrators. 
 
+> ## 
+
+
+
+
+
+
+
 
 ```sql
 DROP WAREHOUSE MY_WAREHOUSE;
