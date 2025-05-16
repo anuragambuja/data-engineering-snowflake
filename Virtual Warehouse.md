@@ -26,7 +26,7 @@
 
 - The first 60 seconds after a virtual warehouse is provisioned and running are always charged.
 - Credit price is determined by region & Snowflake edition.
-- Virtual Warehouses can be manually resized via the Snowflake UI or SQL commands.
+- Virtual Warehouses can be manually resized via the Snowflake UI or SQL commands. So, Scaling is a manual process. 
 - Resizing a running warehouse does not impact running queries. The additional compute resources are used for queued and new queries. Decreasing size of running warehouse removes compute resources from the warehouse and clears the warehouse cache.
 - A multi-cluster warehouse is a named group of virtual warehouses which can automatically scale in and out based on the number of concurrent users/queries.
   - MIN_CLUSTER_COUNT specifies the minimum number of warehouses for a multi-cluster warehouse.
