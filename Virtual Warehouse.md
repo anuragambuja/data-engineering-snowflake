@@ -54,9 +54,17 @@
 - When limits are reached an action can be triggered, such as notify user or suspend warehouse.
 - Resource Monitors can only be created by account administrators. 
 
-> ## 
+> ## Query Acceleration Service
+- The Query Acceleration Service is a feature which can be enabled on a virtual warehouse.
+- It dynamically add serverless compute power to a warehouse when a complex query needs it.
+- In contrast with multi-cluster warehouses, which are created and defined by us, as users, how additional compute resources are allocated but when the query acceleration service is completely controlled by Snowflake.
+- Snowflake will analyze the query plan of a submitted query, and will offload fragments of it, which can be run in parallel to the dynamically requisitioned serverless compute.
+- There are 2 primary factors dictating which queries can be accelerated:
+  - Some part of the query must be able to be run in parallel, like a scan with an aggregation.
+  - The number of partitions to be scanned, so the size of the data being queried.
+- `QUERY_ACCELERATION_ELIGIBLE` VIEW and `ESTIMATE_QUERY_ACCELERATION` system function - are used to verify if a query is eligible to make use of QAS.
 
-
+  ![image](https://github.com/user-attachments/assets/32414868-775a-42d6-af41-c024123befed)
 
 
 
