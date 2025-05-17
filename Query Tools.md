@@ -77,6 +77,17 @@
 - As DML operations are performed on a clustered table, the data in the table might become less clustered. Reclustering is a background process which transparently reorganizes data in the micro-partitions by the clustering key.
 - Initial clustering and subsequent reclustering operations consume compute & storage credits.
 
+> ## Search Optimization
+- Search optimization service is a table level property aimed at improving the performance of selective point lookup queries. These typically return a single row or a small group of rows.
+- The search optimization service speeds up equality searches.
+- The search optimization service is an enterprise edition and higher feature.
+- A background process creates and maintains a search access path to enable search optimization. The search access path records metadata about the entire table to understand where all of the data resides in the underlying micro partitions.
+- The access path data structure requires space for each table on which search optimization is enabled. The larger the table, the larger the access path storage costs.
+
+
+` SELECT NAME, ADDRESS FROM USERS WHERE USER_EMAIL = ‘semper.google.edu’;`
+
+
 
 ```
 CREATE OR REPLACE MATERIALIZED VIEW MV1 AS SELECT COL1, COL2 FROM T1;
