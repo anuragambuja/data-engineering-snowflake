@@ -100,6 +100,7 @@
       - Exists until explicitly dropped.
       - A permanent table can set the time travel retention period up to 90 days if we're on an enterprise edition or higher Snowflake account. If on the standard edition, the max is one day.
       - Permanent tables also have access to the non-configurable period of seven days for fail-safe, in which Snowflake can restore deleted data for us.
+      - Maximumm Retention period is 90 days.
     - Temporary
       - Used for transitory data.
       - Persist for duration of a session.
@@ -107,7 +108,8 @@
       - They also don't have a fail-safe period. Once a session is over, the table data cannot be recovered by Snowflake.
     - Transient:
       - Exists until explicitly dropped.
-      - No fail-safe period. 
+      - No fail-safe period.
+      - Maximum retention is 1 Day.
     - External:
       - Query data outside Snowflake.
       - Read-only table.
@@ -430,15 +432,22 @@
 
 
 > ## Commands
-  ```
-  SELECT SYSTEM$WHITELIST();  Returns hostnames and port numbers.
-  SHOW <object>;  
+```
+SELECT SYSTEM$WHITELIST();  Returns hostnames and port numbers.
+SHOW <object>;  
 
-  GRANT USAGE ON DATABASE MY_DB TO ROLE MY_ROLE;
-  REVOKE USAGE ON DATABASE MY_DB TO ROLE MY_ROLE;
-  GRANT SELECT ON FUTURE TABLES IN SCHEMA MY_SCHEMA TO ROLE MY_ROLE;
-  
-  ```
+GRANT USAGE ON DATABASE MY_DB TO ROLE MY_ROLE;
+REVOKE USAGE ON DATABASE MY_DB TO ROLE MY_ROLE;
+GRANT SELECT ON FUTURE TABLES IN SCHEMA MY_SCHEMA TO ROLE MY_ROLE;
+
+
+SELECT * FROM TABLE(result_scan(last_query_id()));
+
+-- Refresh external table metadata so it reflects latest changes in external cloud storage
+ALTER EXTERNAL TABLE EXT_TABLE REFRESH;
+
+SELECT get_ddl('view', 'SECURE_VIEW');
+```
 
 
 
