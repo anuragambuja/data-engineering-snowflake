@@ -1,6 +1,6 @@
 # Snowflake
 
-- Sanoflake is a cloud-native data platform offered as a service.
+- Snowflake is a cloud-native data platform offered as a service.
   - Cloud Native
     - Snowflake’s software is purpose built for the Cloud.
     - All Snowflake infrastructure runs on the Cloud in either AWS, GCP or Azure.
