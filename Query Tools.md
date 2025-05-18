@@ -80,15 +80,14 @@
 > ## Search Optimization
 - Search optimization service is a table level property aimed at improving the performance of selective point lookup queries. These typically return a single row or a small group of rows.
 - The search optimization service speeds up equality searches.
+
+  ` SELECT NAME, ADDRESS FROM USERS WHERE USER_EMAIL = ‘semper.google.edu’;`
 - The search optimization service is an enterprise edition and higher feature.
 - A background process creates and maintains a search access path to enable search optimization. The search access path records metadata about the entire table to understand where all of the data resides in the underlying micro partitions.
 - The access path data structure requires space for each table on which search optimization is enabled. The larger the table, the larger the access path storage costs.
 
 
-` SELECT NAME, ADDRESS FROM USERS WHERE USER_EMAIL = ‘semper.google.edu’;`
-
-
-
+> ## Commands
 ```
 CREATE OR REPLACE MATERIALIZED VIEW MV1 AS SELECT COL1, COL2 FROM T1;
 ALTER MATERIALIZED VIEW MV1 SUSPEND;
@@ -99,4 +98,9 @@ ALTER MATERIALIZED VIEW MV1 RESUME;
 SHOW MATERIALIZED VIEWS LIKE 'MV1%';
 
 SELECT system$clustering_information(‘table’,’(col1,col3)’);
+
+ALTER TABLE MY_TABLE ADD SEARCH OPTIMIZATION;
+ALTER TABLE MY_TABLE DROP SEARCH OPTIMIZATION;
+SHOW TABLES LIKE ‘%MY_TABLE%';
+
 ```
