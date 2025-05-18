@@ -1,0 +1,15 @@
+> ## Data Movement
+
+
+
+```
+INSERT INTO MY_TABLE (ID, NAME) SELECT ‘001’, ‘John Doughnut’;
+INSERT INTO MY_TABLE SELECT * FROM MY_TABLE_2;
+INSERT INTO MY_TABLE (ID, NAME, DOB) VALUES
+  (‘001’, ‘John Doughnut’, ‘10/10/1976’),
+  (‘002’, ‘Lisa Snowflake’, ‘21/01/1934’),
+  (‘003’, ‘Oggle Berry’, ‘01/01/2001’);
+
+INSERT OVERWRITE INTO MY_TABLE SELECT * FROM MY_TABLE_2;
+
+```
