@@ -158,6 +158,21 @@
  
     ![image](https://github.com/user-attachments/assets/8ef1269e-6432-4117-ba9a-f75bd6694989)
 
+    ```
+    CREATE OR REPLACE API INTEGRATION demonstration_external_api_integration_01
+        API_PROVIDER=aws_api_gateway
+        API_AWS_ROLE_ARN='arn:aws:iam::123456789012:role/my_cloud_account_role'
+        API_ALLOWED_PREFIXES=('https://xyz.execute-api.us-west-2.amazonaws.com/production')
+        ENABLED=true;
+    
+    CREATE OR REPLACE EXTERNAL FUNCTION local_echo(string_col varchar)
+        RETURNS variant
+        API_INTEGRATION = demonstration_external_api_integration_01 -- API Integration object
+        AS 'https://xyz.execute-api.us-west-2.amazonaws.com/production/remote_echo'; -- Proxy service URL
+    
+    SELECT my_external_function(34, 56);
+    ```
+
 - Stored Procedures
   - In Relational Database Management Systems (RDBMS) stored procedures were named collections of SQL statements often containing procedural logic.
   - Stored procedures are database objects, meaning they're created in a specific database and schema.
