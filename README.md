@@ -270,6 +270,9 @@
 - SnowSQL and the Classic Console do not correctly parse Snowflake Scripting blocks, they need to be wrapped in string constant delimiters like dollar signs.
 
     ```
+    snowsql -a <account_identifier> -u <username> -d SNOWFLAKE_SAMPLE_DATA -s TPCH_SF1 -r ACCOUNTADMIN -w COMPUTE_WH  # account_identifier: organization_name-account_name from `SHOW ACCOUNTS;`
+    snowsql -a <account_identifier> -u <username> -d SNOWFLAKE_SAMPLE_DATA -s TPCH_SF1 -r ACCOUNTADMIN -w COMPUTE_WH -q 'SELECT C_NAME, C_ADDRESS FROM CUSTOMER LIMIT 5'
+    
     # Looping data using Cursor
       declare
         total_amount float;
@@ -290,7 +293,19 @@
         return table(res);
       end;
     ```
-- 
+
+```
+!help
+!options
+!set variable_substitution=true
+!define table_name=customer
+!variables
+
+
+PUT file://<path_to_users.sql> @demo_stage;
+CREATE TABLE users (id INT, name STRING, email STRING, age INT);
+COPY INTO users FROM @demo_stage FILE_FORMAT = (TYPE = CSV);
+```
 
 > ## Snowpark
 - Snowpark is an API accessed outside of the Snowflake interface implemented as an alternative to SQL, allowing us to query and process our data using high-level programming languages currently supporting Java, Scala, and Python.
